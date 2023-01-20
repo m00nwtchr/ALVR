@@ -1,5 +1,6 @@
 [package]
 name = "alvr_dashboard"
+description.workspace = true
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -43,3 +44,19 @@ locale_config = "0.3"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1"
+
+[package.metadata.deb]
+name = "alvr"
+maintainer = "m00n"
+section = "net"
+depends = "libx264, libjack-jackd2-0, $auto"
+assets = [
+    ["target/release/alvr_dashboard", "usr/bin/", "755"],
+    ["target/release/alvr_launcher", "usr/bin/", "755"],
+    ["target/release/alvr_vrcompositor_wrapper", "usr/libexec/alvr/vrcompositor-wrapper", "755"],
+    ["target/release/libalvr_vulkan_layer.so", "usr/lib64/", "644"],
+    ["target/release/libalvr_server.so", "usr/lib64/alvr/bin/linux64/driver_alvr_server.so", "644"],
+    ["../../alvr/vulkan_layer/layer/alvr_x86_64.json", "usr/share/vulkan/explicit_layer.d/", "644"],
+    ["../../alvr/xtask/resources/driver.vrdrivermanifest", "usr/lib64/alvr/", "644"],
+    ["../../dashboard/**/*", "usr/share/alvr/dashboard/", "644"],
+]
