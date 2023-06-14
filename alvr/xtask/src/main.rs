@@ -175,7 +175,7 @@ fn main() {
                         if cfg!(windows) {
                             dependencies::prepare_windows_deps(for_ci);
                         } else if cfg!(target_os = "linux") {
-                            dependencies::build_ffmpeg_linux(!no_nvidia);
+                            dependencies::build_ffmpeg_linux(!no_nvidia, use_ffmpeg_sources);
                         }
 
                         dependencies::build_android_deps(for_ci);
