@@ -43,6 +43,7 @@ FLAGS:
     --no-rebuild        Do not rebuild the streamer with run-streamer
     --ci                Do some CI related tweaks. Depends on the other flags and subcommand
     --no-stdcpp         Disable linking to libc++_shared with build-client-lib
+    --use-sources       Use existing ffmpeg sources. (prepare-deps)
 
 ARGS:
     --platform <NAME>   Name of the platform (operative system or hardware name). snake_case
@@ -152,6 +153,7 @@ fn main() {
         let appimage = args.contains("--appimage");
         let zsync = args.contains("--zsync");
         let link_stdcpp = !args.contains("--no-stdcpp");
+        let use_ffmpeg_sources = !args.contains("--use-sources");
 
         let platform: Option<String> = args.opt_value_from_str("--platform").unwrap();
         let version: Option<String> = args.opt_value_from_str("--version").unwrap();
@@ -163,7 +165,9 @@ fn main() {
                     if let Some(platform) = platform {
                         match platform.as_str() {
                             "windows" => dependencies::prepare_windows_deps(for_ci),
-                            "linux" => dependencies::build_ffmpeg_linux(!no_nvidia),
+                            "linux" => {
+                                dependencies::build_ffmpeg_linux(!no_nvidia, use_ffmpeg_sources)
+                            }
                             "android" => dependencies::build_android_deps(for_ci),
                             _ => panic!("Unrecognized platform."),
                         }
